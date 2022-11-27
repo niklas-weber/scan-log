@@ -16,9 +16,6 @@ on:
       - '**.md'
   workflow_dispatch:
 
-env:
-  NODE_OPTIONS: '--openssl-legacy-provider' #Node 18 legacy option for ncc
-
 jobs:
   check-dist:
     runs-on: ubuntu-latest
@@ -35,6 +32,8 @@ jobs:
         run: npm ci
 
       - name: Rebuild the dist/ directory
+        env:
+          NODE_OPTIONS: '--openssl-legacy-provider' #Node 18 legacy option for ncc
         run: |
           npm run build
           npm run package
