@@ -37,7 +37,7 @@ async function run(): Promise<void> {
         repo: core.getInput('repo-name')
       })
 
-      core.debug(`Log URL: ${wfURL.headers.location}`)
+      core.debug(`Log URL: ${wfURL.headers}`)
 
       core.debug('Creating HTTP Client')
       const httpClient = new HttpClient('gh-http-client', [], {
@@ -52,7 +52,7 @@ async function run(): Promise<void> {
         const body: string = await res.readBody()
         core.debug(body)
       } else {
-        core.error("Can't get log access; missing URL")
+        core.setFailed("Can't get log access; missing URL")
       }
     } catch (error) {
       if (error instanceof Error) core.setFailed(error.message)
