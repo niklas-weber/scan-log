@@ -84,7 +84,8 @@ function run() {
                 owner: repoOwner,
                 repo: repoName
             });
-            core.info(`Log URL: ${errorLogs.data}`);
+            core.info('\u001b[35mPrevious job logs:');
+            core.info(String(errorLogs.data));
             const errorInPrevJob = (0, errorcheck_1.errorCheck)(core.getInput('error'), String(errorLogs.data));
             if (!errorInPrevJob) {
                 core.info('✅ No errors found');
