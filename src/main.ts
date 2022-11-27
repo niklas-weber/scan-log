@@ -6,7 +6,7 @@ async function run(): Promise<void> {
   try {
     core.debug('Get input for "error"')
     const errorRegex = new RegExp(core.getInput('error', {required: true}))
-    
+
     core.debug('Check regex against "ERROR"')
     core.debug(String(errorRegex.test('ERROR')))
 
