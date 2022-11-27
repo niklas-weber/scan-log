@@ -5,22 +5,27 @@ import {HttpClient, HttpClientResponse} from '@actions/http-client'
 async function run(): Promise<void> {
   try {
     const errorRegex = new RegExp(core.getInput('error', {required: true}))
-
+    
+    core.debug('Check regex against "ERROR"')
     core.debug(String(errorRegex.test('ERROR')))
 
     const ghToken: string = core.getInput('gh-token', {required: true})
 
+    core.debug('Get octokit instance')
     const octokit = github.getOctokit(ghToken)
 
+    core.debug('Getting Workflow logs')
     const wfURL = await octokit.rest.actions.downloadWorkflowRunLogs()
 
     core.debug(`Log URL: ${wfURL.headers.location}`)
 
+    core.debug('Creating HTTP Client')
     const httpClient = new HttpClient('gh-http-client', [], {
       headers: {'Conten-Type': 'application/json'}
     })
 
     if (wfURL.headers.location !== undefined) {
+      core.debug('GET logs')
       const res: HttpClientResponse = await httpClient.get(
         wfURL.headers.location
       )
