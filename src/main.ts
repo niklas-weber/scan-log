@@ -16,7 +16,7 @@ async function run(): Promise<void> {
     const repoName = core.getInput('repo-name').replace(`${repoOwner}/`, '')
     core.debug(`Repo name: ${repoName}`)
 
-    core.debug(core.getInput('run-id'))
+    core.debug(`Job ID ${core.getInput('run-id')}`)
     core.debug('Getting workflow jobs')
     const resJobs = await octokit.rest.actions.listJobsForWorkflowRun({
       run_id: Number(core.getInput('run-id')),
@@ -33,8 +33,8 @@ async function run(): Promise<void> {
     core.debug('Getting workflow logs')
     const errorLogs = await octokit.rest.actions.downloadJobLogsForWorkflowRun({
       job_id: job[0].id,
-      owner: core.getInput('repo-owner'),
-      repo: core.getInput('repo-name')
+      owner: repoOwner,
+      repo: repoName
     })
 
     core.info(`Log URL: ${errorLogs.data}`)
