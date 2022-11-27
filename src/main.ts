@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {HttpClient, HttpClientResponse} from '@actions/http-client'
 
 async function run(): Promise<void> {
   try {
@@ -31,28 +30,21 @@ async function run(): Promise<void> {
       core.debug(`Job ID: ${job[0].id}`)
 
       core.debug('Getting workflow logs')
-      const wfURL = await octokit.rest.actions.downloadJobLogsForWorkflowRun({
-        job_id: job[0].id,
-        owner: core.getInput('repo-owner'),
-        repo: core.getInput('repo-name')
-      })
+      const errorLogs =
+        await octokit.rest.actions.downloadJobLogsForWorkflowRun({
+          job_id: job[0].id,
+          owner: core.getInput('repo-owner'),
+          repo: core.getInput('repo-name')
+        })
 
-      core.info(`Log URL: ${wfURL.data}`)
+      core.info(`Log URL: ${errorLogs.data}`)
 
-      core.debug('Creating HTTP Client')
-      const httpClient = new HttpClient('gh-http-client', [], {
-        headers: {'Conten-Type': 'application/json'}
-      })
+      const errorInPrevJob: boolean = errorRegex.test(String(errorLogs.data))
 
-      if (wfURL.headers.location !== undefined) {
-        core.debug('GET logs')
-        const res: HttpClientResponse = await httpClient.get(
-          wfURL.headers.location
-        )
-        const body: string = await res.readBody()
-        core.debug(body)
+      if (!errorInPrevJob) {
+        core.info('✅ No errors found')
       } else {
-        core.setFailed("Can't get log access; missing URL")
+        core.setFailed('❌ Error in previous log')
       }
     } catch (error) {
       if (error instanceof Error) core.setFailed(error.message)

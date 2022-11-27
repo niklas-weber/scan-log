@@ -41,7 +41,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const http_client_1 = __nccwpck_require__(6255);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -63,24 +62,18 @@ function run() {
                 const job = resJobs.data.jobs.filter(val => val.name === core.getInput('job-name'));
                 core.debug(`Job ID: ${job[0].id}`);
                 core.debug('Getting workflow logs');
-                const wfURL = yield octokit.rest.actions.downloadJobLogsForWorkflowRun({
+                const errorLogs = yield octokit.rest.actions.downloadJobLogsForWorkflowRun({
                     job_id: job[0].id,
                     owner: core.getInput('repo-owner'),
                     repo: core.getInput('repo-name')
                 });
-                core.info(`Log URL: ${wfURL.data}`);
-                core.debug('Creating HTTP Client');
-                const httpClient = new http_client_1.HttpClient('gh-http-client', [], {
-                    headers: { 'Conten-Type': 'application/json' }
-                });
-                if (wfURL.headers.location !== undefined) {
-                    core.debug('GET logs');
-                    const res = yield httpClient.get(wfURL.headers.location);
-                    const body = yield res.readBody();
-                    core.debug(body);
+                core.info(`Log URL: ${errorLogs.data}`);
+                const errorInPrevJob = errorRegex.test(String(errorLogs.data));
+                if (!errorInPrevJob) {
+                    core.info('✅ No errors found');
                 }
                 else {
-                    core.setFailed("Can't get log access; missing URL");
+                    core.setFailed('❌ Error in previous log');
                 }
             }
             catch (error) {
