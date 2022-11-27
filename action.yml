@@ -1,8 +1,9 @@
 name: 'Log Scanner'
 description: 'Scan logs from previous actions for specific strings'
 author: 'niklas-weber'
-icon: check
-color: red
+branding:
+  icon: check
+  color: red
 inputs:
   error:
     required: true
