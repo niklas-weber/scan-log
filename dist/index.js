@@ -45,15 +45,23 @@ const http_client_1 = __nccwpck_require__(6255);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            core.debug('Get input for "error"');
             const errorRegex = new RegExp(core.getInput('error', { required: true }));
+            core.debug('Check regex against "ERROR"');
             core.debug(String(errorRegex.test('ERROR')));
+            core.debug('Get input for "gh-token"');
             const ghToken = core.getInput('gh-token', { required: true });
+            core.debug('Get octokit instance');
             const octokit = github.getOctokit(ghToken);
+            core.debug('Getting Workflow logs');
             const wfURL = yield octokit.rest.actions.downloadWorkflowRunLogs();
+            core.debug(`Log URL: ${wfURL.headers.location}`);
+            core.debug('Creating HTTP Client');
             const httpClient = new http_client_1.HttpClient('gh-http-client', [], {
                 headers: { 'Conten-Type': 'application/json' }
             });
             if (wfURL.headers.location !== undefined) {
+                core.debug('GET logs');
                 const res = yield httpClient.get(wfURL.headers.location);
                 const body = yield res.readBody();
                 core.debug(body);
