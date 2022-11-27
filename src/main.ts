@@ -10,47 +10,44 @@ async function run(): Promise<void> {
     core.debug('Get octokit instance')
     const octokit = github.getOctokit(ghToken)
 
-    // const owner = core.getInput('repo-owner')
-    // core.debug(owner)
-    // const repo = core.getInput('repo-name').replace(`${owner}/`, '')
-    // core.debug(repo)
+    const repoOwner = core.getInput('repo-owner')
+    core.debug(`Repo owner: ${repoOwner}`)
 
-    try {
-      core.debug('Getting workflow jobs')
-      const resJobs = await octokit.rest.actions.listJobsForWorkflowRun({
-        run_id: Number(core.getInput('run-id')),
-        owner: 'niklas-weber',
-        repo: 'scan-log'
-      })
+    const repoName = core.getInput('repo-name').replace(`${repoOwner}/`, '')
+    core.debug(`Repo name: ${repoName}`)
 
-      const job = resJobs.data.jobs.filter(
-        val => val.name === core.getInput('job-name')
-      )
+    core.debug(core.getInput('run-id'))
+    core.debug('Getting workflow jobs')
+    const resJobs = await octokit.rest.actions.listJobsForWorkflowRun({
+      run_id: Number(core.getInput('run-id')),
+      owner: repoOwner,
+      repo: repoName
+    })
 
-      core.debug(`Job ID: ${job[0].id}`)
+    const job = resJobs.data.jobs.filter(
+      val => val.name === core.getInput('job-name')
+    )
 
-      core.debug('Getting workflow logs')
-      const errorLogs =
-        await octokit.rest.actions.downloadJobLogsForWorkflowRun({
-          job_id: job[0].id,
-          owner: core.getInput('repo-owner'),
-          repo: core.getInput('repo-name')
-        })
+    core.debug(`Job ID: ${job[0].id}`)
 
-      core.info(`Log URL: ${errorLogs.data}`)
+    core.debug('Getting workflow logs')
+    const errorLogs = await octokit.rest.actions.downloadJobLogsForWorkflowRun({
+      job_id: job[0].id,
+      owner: core.getInput('repo-owner'),
+      repo: core.getInput('repo-name')
+    })
 
-      const errorInPrevJob = errorCheck(
-        core.getInput('error'),
-        String(errorLogs.data)
-      )
+    core.info(`Log URL: ${errorLogs.data}`)
 
-      if (!errorInPrevJob) {
-        core.info('✅ No errors found')
-      } else {
-        core.setFailed('❌ Error in previous log')
-      }
-    } catch (error) {
-      if (error instanceof Error) core.setFailed(error.message)
+    const errorInPrevJob = errorCheck(
+      core.getInput('error'),
+      String(errorLogs.data)
+    )
+
+    if (!errorInPrevJob) {
+      core.info('✅ No errors found')
+    } else {
+      core.setFailed('❌ Error in previous log')
     }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
