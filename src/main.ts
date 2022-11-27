@@ -1,27 +1,31 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {HttpClient, HttpClientResponse} from '@actions/http-client'
-import {wait} from './wait'
 
 async function run(): Promise<void> {
   try {
-    const errorRegex: RegExp = new RegExp(core.getInput('error', {required: true}));
-    const ghToken: string = core.getInput('gh-token', {required: true});
+    const errorRegex = new RegExp(core.getInput('error', {required: true}))
 
-    const octokit = github.getOctokit(ghToken);
+    core.debug(String(errorRegex.test('ERROR')))
 
-    const wfURL = await octokit.rest.actions.downloadWorkflowRunLogs();
+    const ghToken: string = core.getInput('gh-token', {required: true})
+
+    const octokit = github.getOctokit(ghToken)
+
+    const wfURL = await octokit.rest.actions.downloadWorkflowRunLogs()
 
     const httpClient = new HttpClient('gh-http-client', [], {
       headers: {'Conten-Type': 'application/json'}
-    });
+    })
 
     if (wfURL.headers.location !== undefined) {
-      const res: HttpClientResponse = await httpClient.get(wfURL.headers.location);
-      const body: string = await res.readBody();
-      core.debug(body);
+      const res: HttpClientResponse = await httpClient.get(
+        wfURL.headers.location
+      )
+      const body: string = await res.readBody()
+      core.debug(body)
     } else {
-      core.error('Can\'t get log access; missing URL');
+      core.error("Can't get log access; missing URL")
     }
     // const ms: string = core.getInput('milliseconds')
     // core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true

@@ -46,6 +46,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const errorRegex = new RegExp(core.getInput('error', { required: true }));
+            core.debug(String(errorRegex.test('ERROR')));
             const ghToken = core.getInput('gh-token', { required: true });
             const octokit = github.getOctokit(ghToken);
             const wfURL = yield octokit.rest.actions.downloadWorkflowRunLogs();
@@ -58,7 +59,7 @@ function run() {
                 core.debug(body);
             }
             else {
-                core.error('Can\'t get log access; missing URL');
+                core.error("Can't get log access; missing URL");
             }
             // const ms: string = core.getInput('milliseconds')
             // core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
