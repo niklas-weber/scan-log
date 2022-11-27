@@ -4,6 +4,7 @@ on: # rebuild any PRs and main branch changes
   push:
     branches:
       - main
+      - develop
       - 'releases/*'
 
 jobs:
@@ -15,10 +16,18 @@ jobs:
           npm install
       - run: |
           npm run all
+  error-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ERROR
   test: # make sure the action works on a clean machine without building
+    needs: 'error-job'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./
         with:
-          milliseconds: 1000
+          error: 'No ERROR found'
+          gh-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.run_id }}
+          job-name: 'error-job'

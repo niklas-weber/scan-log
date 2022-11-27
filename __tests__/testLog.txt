@@ -1,0 +1,44 @@
+2022-11-27T15:16:53.2792956Z Requested labels: ubuntu-latest
+2022-11-27T15:16:53.2793021Z Job defined at: niklas-weber/scan-log/.github/workflows/test.yml@refs/heads/develop
+2022-11-27T15:16:53.2793038Z Waiting for a runner to pick up this job...
+2022-11-27T15:16:53.4963098Z Job is waiting for a hosted runner to come online.
+2022-11-27T15:16:57.9846324Z Job is about to start running on the hosted runner: Hosted Agent (hosted)
+2022-11-27T15:17:00.2721008Z Current runner version: '2.299.1'
+2022-11-27T15:17:00.2748157Z ##[group]Operating System
+2022-11-27T15:17:00.2748701Z Ubuntu
+2022-11-27T15:17:00.2748949Z 20.04.5
+2022-11-27T15:17:00.2749248Z LTS
+2022-11-27T15:17:00.2749556Z ##[endgroup]
+2022-11-27T15:17:00.2749881Z ##[group]Runner Image
+2022-11-27T15:17:00.2750233Z Image: ubuntu-20.04
+2022-11-27T15:17:00.2750839Z Version: 20221119.2
+2022-11-27T15:17:00.2751398Z Included Software: https://github.com/actions/runner-images/blob/ubuntu20/20221119.2/images/linux/Ubuntu2004-Readme.md
+2022-11-27T15:17:00.2752007Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu20%2F20221119.2
+2022-11-27T15:17:00.2752496Z ##[endgroup]
+2022-11-27T15:17:00.2752851Z ##[group]Runner Image Provisioner
+2022-11-27T15:17:00.2753145Z 2.0.91.1
+2022-11-27T15:17:00.2753438Z ##[endgroup]
+2022-11-27T15:17:00.2754456Z ##[group]GITHUB_TOKEN Permissions
+2022-11-27T15:17:00.2755090Z Actions: write
+2022-11-27T15:17:00.2755364Z Checks: write
+2022-11-27T15:17:00.2755843Z Contents: write
+2022-11-27T15:17:00.2756320Z Deployments: write
+2022-11-27T15:17:00.2756609Z Discussions: write
+2022-11-27T15:17:00.2756934Z Issues: write
+2022-11-27T15:17:00.2757227Z Metadata: read
+2022-11-27T15:17:00.2757531Z Packages: write
+2022-11-27T15:17:00.2757860Z Pages: write
+2022-11-27T15:17:00.2758192Z PullRequests: write
+2022-11-27T15:17:00.2758527Z RepositoryProjects: write
+2022-11-27T15:17:00.2758886Z SecurityEvents: write
+2022-11-27T15:17:00.2759260Z Statuses: write
+2022-11-27T15:17:00.2759533Z ##[endgroup]
+2022-11-27T15:17:00.2763869Z Secret source: Actions
+2022-11-27T15:17:00.2764389Z Prepare workflow directory
+2022-11-27T15:17:00.3588071Z Prepare all required actions
+2022-11-27T15:17:00.4992360Z ##[group]Run echo ERROR
+2022-11-27T15:17:00.4992772Z [36;1mecho ERROR[0m
+2022-11-27T15:17:00.5646079Z shell: /usr/bin/bash -e {0}
+2022-11-27T15:17:00.5646468Z ##[endgroup]
+2022-11-27T15:17:00.6208255Z ERROR
+2022-11-27T15:17:00.6461958Z Cleaning up orphan processes

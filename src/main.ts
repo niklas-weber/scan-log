@@ -1,16 +1,55 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as github from '@actions/github'
+import {errorCheck} from './errorcheck'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    core.debug('Get input for "gh-token"')
+    const ghToken: string = core.getInput('gh-token', {required: true})
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    core.debug('Get octokit instance')
+    const octokit = github.getOctokit(ghToken)
 
-    core.setOutput('time', new Date().toTimeString())
+    const repoOwner = core.getInput('repo-owner')
+    core.debug(`Repo owner: ${repoOwner}`)
+
+    const repoName = core.getInput('repo-name').replace(`${repoOwner}/`, '')
+    core.debug(`Repo name: ${repoName}`)
+
+    core.debug(`Job ID ${core.getInput('run-id')}`)
+    core.debug('Getting workflow jobs')
+    const resJobs = await octokit.rest.actions.listJobsForWorkflowRun({
+      run_id: Number(core.getInput('run-id')),
+      owner: repoOwner,
+      repo: repoName
+    })
+
+    const job = resJobs.data.jobs.filter(
+      val => val.name === core.getInput('job-name')
+    )
+
+    core.debug(`Job ID: ${job[0].id}`)
+
+    core.debug('Getting workflow logs')
+    const errorLogs = await octokit.rest.actions.downloadJobLogsForWorkflowRun({
+      job_id: job[0].id,
+      owner: repoOwner,
+      repo: repoName
+    })
+
+    core.info('\u001b[35mPrevious job logs:')
+    core.info(String(errorLogs.data))
+
+    const errorInPrevJob = errorCheck(
+      core.getInput('error'),
+      String(errorLogs.data)
+    )
+
+    if (!errorInPrevJob) {
+      core.info('✅ No errors found')
+    } else {
+      core.setFailed('❌ Error in previous log')
+    }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }

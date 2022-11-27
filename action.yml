@@ -1,11 +1,29 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Log Scanner'
+description: 'Scan logs from previous actions for specific strings'
+author: 'niklas-weber'
 inputs:
-  milliseconds: # change this
+  error:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Regex for error string'
+    default: '^ERROR.*'
+  gh-token:
+    required: true
+    description: 'Github repo token'
+  run-id:
+    required: true
+    description: 'Github run ID'
+  job-name:
+    required: true
+    description: 'Current Job name'
+  repo-owner:
+    required: false
+    description: 'Repo owner'
+    default: ${{ github.repository_owner }}
+  repo-name:
+    required: false
+    description: 'Repo name'
+    default: ${{ github.repository }}
+  
 runs:
   using: 'node16'
   main: 'dist/index.js'
