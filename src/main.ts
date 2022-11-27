@@ -17,25 +17,27 @@ async function run(): Promise<void> {
     const octokit = github.getOctokit(ghToken)
 
     core.debug('Getting Workflow logs')
-    const wfURL = await octokit.rest.actions.downloadWorkflowRunLogs()
+    try {
+      const wfURL = await octokit.rest.actions.downloadJobLogsForWorkflowRun()
 
-    core.debug(`Log URL: ${wfURL.headers.location}`)
+      core.debug(`Log URL: ${wfURL.headers.location}`)
 
-    core.debug('Creating HTTP Client')
-    const httpClient = new HttpClient('gh-http-client', [], {
-      headers: {'Conten-Type': 'application/json'}
-    })
+      core.debug('Creating HTTP Client')
+      const httpClient = new HttpClient('gh-http-client', [], {
+        headers: {'Conten-Type': 'application/json'}
+      })
 
-    if (wfURL.headers.location !== undefined) {
-      core.debug('GET logs')
-      const res: HttpClientResponse = await httpClient.get(
-        wfURL.headers.location
-      )
-      const body: string = await res.readBody()
-      core.debug(body)
-    } else {
-      core.error("Can't get log access; missing URL")
-    }
+      if (wfURL.headers.location !== undefined) {
+        core.debug('GET logs')
+        const res: HttpClientResponse = await httpClient.get(
+          wfURL.headers.location
+        )
+        const body: string = await res.readBody()
+        core.debug(body)
+      } else {
+        core.error("Can't get log access; missing URL")
+      }
+    } catch (error) {}
     // const ms: string = core.getInput('milliseconds')
     // core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
