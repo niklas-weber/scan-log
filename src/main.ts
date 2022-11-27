@@ -14,6 +14,8 @@ async function run(): Promise<void> {
 
     const wfURL = await octokit.rest.actions.downloadWorkflowRunLogs()
 
+    core.debug(`Log URL: ${wfURL.headers.location}`)
+
     const httpClient = new HttpClient('gh-http-client', [], {
       headers: {'Conten-Type': 'application/json'}
     })
