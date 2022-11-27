@@ -9,6 +9,16 @@ inputs:
   gh-token:
     required: true
     description: 'Github repo token'
+  job-id:
+    required: true
+    description: 'Github job container ID'
+  repo-owner:
+    required: true
+    description: 'Repo owner'
+  repo-name:
+    required: true
+    description: 'Repo name'
+  
 runs:
   using: 'node16'
   main: 'dist/index.js'

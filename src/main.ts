@@ -15,10 +15,16 @@ async function run(): Promise<void> {
 
     core.debug('Get octokit instance')
     const octokit = github.getOctokit(ghToken)
-
-    core.debug('Getting Workflow logs')
+    
     try {
-      const wfURL = await octokit.rest.actions.downloadJobLogsForWorkflowRun()
+      core.debug('Getting Workflow logs')
+      const wfURL = await octokit.rest.actions.downloadJobLogsForWorkflowRun(
+        {
+          job_id: Number(core.getInput('job-id')),
+          owner: core.getInput('repo-owner'),
+          repo: core.getInput('repo-name')
+        }
+      )
 
       core.debug(`Log URL: ${wfURL.headers.location}`)
 
@@ -37,15 +43,9 @@ async function run(): Promise<void> {
       } else {
         core.error("Can't get log access; missing URL")
       }
-    } catch (error) {}
-    // const ms: string = core.getInput('milliseconds')
-    // core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-
-    // core.debug(new Date().toTimeString())
-    // await wait(parseInt(ms, 10))
-    // core.debug(new Date().toTimeString())
-
-    // core.setOutput('time', new Date().toTimeString())
+    } catch (error) {
+      if (error instanceof Error) core.setFailed(error.message)
+    }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
