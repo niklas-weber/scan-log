@@ -1,14 +1,9 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import {errorCheck} from './errorcheck'
 
 async function run(): Promise<void> {
   try {
-    core.debug('Get input for "error"')
-    const errorRegex = new RegExp(core.getInput('error', {required: true}))
-
-    core.debug('Check regex against "ERROR"')
-    core.debug(String(errorRegex.test('ERROR')))
-
     core.debug('Get input for "gh-token"')
     const ghToken: string = core.getInput('gh-token', {required: true})
 
@@ -39,7 +34,10 @@ async function run(): Promise<void> {
 
       core.info(`Log URL: ${errorLogs.data}`)
 
-      const errorInPrevJob: boolean = errorRegex.test(String(errorLogs.data))
+      const errorInPrevJob = errorCheck(
+        core.getInput('error'),
+        String(errorLogs.data)
+      )
 
       if (!errorInPrevJob) {
         core.info('✅ No errors found')

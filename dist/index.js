@@ -1,6 +1,22 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 598:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.errorCheck = void 0;
+function errorCheck(errorString, checkString) {
+    const regex = new RegExp(errorString);
+    return regex.test(checkString);
+}
+exports.errorCheck = errorCheck;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -41,13 +57,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
+const errorcheck_1 = __nccwpck_require__(598);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.debug('Get input for "error"');
-            const errorRegex = new RegExp(core.getInput('error', { required: true }));
-            core.debug('Check regex against "ERROR"');
-            core.debug(String(errorRegex.test('ERROR')));
             core.debug('Get input for "gh-token"');
             const ghToken = core.getInput('gh-token', { required: true });
             core.debug('Get octokit instance');
@@ -68,7 +81,7 @@ function run() {
                     repo: core.getInput('repo-name')
                 });
                 core.info(`Log URL: ${errorLogs.data}`);
-                const errorInPrevJob = errorRegex.test(String(errorLogs.data));
+                const errorInPrevJob = (0, errorcheck_1.errorCheck)(core.getInput('error'), String(errorLogs.data));
                 if (!errorInPrevJob) {
                     core.info('✅ No errors found');
                 }
