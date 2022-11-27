@@ -2,10 +2,13 @@ name: 'Log Scanner'
 description: 'Scan logs from previous actions for specific strings'
 author: 'niklas-weber'
 inputs:
-  error: # change this
+  error:
     required: true
     description: 'Regex for error string'
     default: '^ERROR.*'
+  gh-token:
+    required: true
+    description: 'Github repo token'
 runs:
   using: 'node18'
   main: 'dist/index.js'
