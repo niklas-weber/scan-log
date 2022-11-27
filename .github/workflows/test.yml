@@ -24,6 +24,6 @@ jobs:
         with:
           error: '^ERROR.*'
           gh-token: ${{ secrets.GITHUB_TOKEN }}
-          job-id: ${{ github.job }}
+          job-id: ${{ job.container.id }}
           repo-name: scan-log
           repo-owner: niklas-weber
