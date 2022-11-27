@@ -10,17 +10,17 @@ async function run(): Promise<void> {
     core.debug('Get octokit instance')
     const octokit = github.getOctokit(ghToken)
 
-    const owner = core.getInput('repo-owner')
-    core.debug(owner)
-    const repo = core.getInput('repo-name').replace(`${owner}/`, '')
-    core.debug(repo)
+    // const owner = core.getInput('repo-owner')
+    // core.debug(owner)
+    // const repo = core.getInput('repo-name').replace(`${owner}/`, '')
+    // core.debug(repo)
 
     try {
       core.debug('Getting workflow jobs')
       const resJobs = await octokit.rest.actions.listJobsForWorkflowRun({
         run_id: Number(core.getInput('run-id')),
-        owner,
-        repo
+        owner: 'niklas-weber',
+        repo: 'scan-log'
       })
 
       const job = resJobs.data.jobs.filter(
