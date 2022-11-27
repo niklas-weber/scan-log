@@ -16,6 +16,9 @@ on:
       - '**.md'
   workflow_dispatch:
 
+env:
+  NODE_OPTIONS: '--openssl-legacy-provider' #Node 18 legacy option for ncc
+
 jobs:
   check-dist:
     runs-on: ubuntu-latest
