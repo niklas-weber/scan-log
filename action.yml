@@ -9,9 +9,12 @@ inputs:
   gh-token:
     required: true
     description: 'Github repo token'
-  job-id:
+  run-id:
     required: true
-    description: 'Github job container ID'
+    description: 'Github run ID'
+  job-name:
+    required: true
+    description: 'Current Job name'
   repo-owner:
     required: true
     description: 'Repo owner'

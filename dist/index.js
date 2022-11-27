@@ -54,9 +54,17 @@ function run() {
             core.debug('Get octokit instance');
             const octokit = github.getOctokit(ghToken);
             try {
-                core.debug('Getting Workflow logs');
+                core.debug('Getting workflow jobs');
+                const resJobs = yield octokit.rest.actions.listJobsForWorkflowRun({
+                    run_id: Number(core.getInput('run-id')),
+                    owner: core.getInput('repo-owner'),
+                    repo: core.getInput('repo-name')
+                });
+                const job = resJobs.data.jobs.filter(val => val.name === core.getInput('job-name'));
+                core.debug(`Job ID: ${job[0].id}`);
+                core.debug('Getting workflow logs');
                 const wfURL = yield octokit.rest.actions.downloadJobLogsForWorkflowRun({
-                    job_id: Number(core.getInput('job-id')),
+                    job_id: job[0].id,
                     owner: core.getInput('repo-owner'),
                     repo: core.getInput('repo-name')
                 });
