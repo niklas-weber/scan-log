@@ -65,12 +65,16 @@ function run() {
             const ghToken = core.getInput('gh-token', { required: true });
             core.debug('Get octokit instance');
             const octokit = github.getOctokit(ghToken);
+            const owner = core.getInput('repo-owner');
+            core.debug(owner);
+            const repo = core.getInput('repo-name').replace(`${owner}/`, '');
+            core.debug(repo);
             try {
                 core.debug('Getting workflow jobs');
                 const resJobs = yield octokit.rest.actions.listJobsForWorkflowRun({
                     run_id: Number(core.getInput('run-id')),
-                    owner: core.getInput('repo-owner'),
-                    repo: core.getInput('repo-name')
+                    owner,
+                    repo
                 });
                 const job = resJobs.data.jobs.filter(val => val.name === core.getInput('job-name'));
                 core.debug(`Job ID: ${job[0].id}`);

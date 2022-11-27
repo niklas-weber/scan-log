@@ -16,11 +16,13 @@ inputs:
     required: true
     description: 'Current Job name'
   repo-owner:
-    required: true
+    required: false
     description: 'Repo owner'
+    default: ${{ github.repository_owner }}
   repo-name:
-    required: true
+    required: false
     description: 'Repo name'
+    default: ${{ github.repository }}
   
 runs:
   using: 'node16'
