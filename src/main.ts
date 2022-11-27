@@ -37,7 +37,7 @@ async function run(): Promise<void> {
         repo: core.getInput('repo-name')
       })
 
-      core.debug(`Log URL: ${wfURL.headers}`)
+      core.info(`Log URL: ${wfURL.data}`)
 
       core.debug('Creating HTTP Client')
       const httpClient = new HttpClient('gh-http-client', [], {

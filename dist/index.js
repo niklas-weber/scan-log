@@ -68,7 +68,7 @@ function run() {
                     owner: core.getInput('repo-owner'),
                     repo: core.getInput('repo-name')
                 });
-                core.debug(`Log URL: ${wfURL.headers}`);
+                core.info(`Log URL: ${wfURL.data}`);
                 core.debug('Creating HTTP Client');
                 const httpClient = new http_client_1.HttpClient('gh-http-client', [], {
                     headers: { 'Conten-Type': 'application/json' }
