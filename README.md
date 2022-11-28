@@ -7,7 +7,6 @@ This comes in handy when a task does not exit with an error status even if somet
   check-error:
     needs: errornous-job
     steps:
-      - uses: actions/checkout@v3
       - uses: niklas-weber/scan-log
         with:
           error: 'ERROR Code'
